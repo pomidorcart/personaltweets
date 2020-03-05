@@ -18,9 +18,9 @@ class SocialServiceProvider extends ServiceProvider
     {
         $this->app->bind('App\Services\Contracts\SocialServiceInterface',
         'App\Services\TwitterService');
-
+        
+        //inject custom repositories
         $this->app->bind(SocialRepositoryInterface::class, function($app) {
-            // This is what Doctrine's EntityRepository needs in its constructor.
             return new TwitterMessageRepository(
                 $app['em'],
                 $app['em']->getClassMetaData(Social::class)
