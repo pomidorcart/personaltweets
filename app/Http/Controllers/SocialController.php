@@ -5,33 +5,55 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Services\Contracts\SocialServiceInterface;
+use App\Entities\Repositories\SocialRepositoryInterface;
 use Illuminate\Support\Collection;
 use App\Entities\Social;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
-use App\Entities\Repositories\SocialRepositoryInterface;
 
 class SocialController extends Controller
 {
     private $entityManager;
     private $socialService;
+    private $resultPerPage;
 
     //inject the Doctrine EntityManager and Social Service Provider
     public function __construct(EntityManagerInterface $entityManager, SocialServiceInterface $socialService)
     {
         $this->entityManager = $entityManager;
         $this->socialService = $socialService;
-        $socialService->socialAuthenticate();        
+        $socialService->socialAuthenticate();  
+        $this->resultPerPage = 10;      
     }
 
-    //fetch records from database
-    public function index(SocialRepositoryInterface $social){
-        $messages = $social->findAll();
-        dd($messages);
-        return view('messages', [
+    //fetch records from database, served via Laravel view: /messages
+    public function indexView(Request $request, SocialRepositoryInterface $social){
+        if (!empty($request->input('page'))) {
+            $page = $request->input('page');
+        } else {
+            $page = 1;
+        }
+
+        $messages = $social->findAllPaginated($this->resultPerPage, $page);
+       
+        return view('social.messages', [
             'messages' => $messages
         ]);
+    }
+
+    //fetch records from database, served via api endpoint: api/social
+    public function indexApi(Request $request, SocialRepositoryInterface $social){
+        if (!empty($request->input('page'))) {
+            $page = $request->input('page');
+        } else {
+            $page = 1;
+        }
+
+        $messages = $social->findAll();
+        //dd($messages);
+        return response(json_encode($messages))
+            ->header('Content-Type', 'json');
     }
 
     //fetch social messages from social provider and save into db

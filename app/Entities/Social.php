@@ -2,13 +2,14 @@
 
 namespace App\Entities;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="social")
  */
 
-class Social {
+class Social implements JsonSerializable{
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=150)
@@ -68,6 +69,15 @@ class Social {
 
     public function setCreatedAt($date){
         $this->created_at = $date;
+    }
+
+    public function jsonSerialize()
+    {
+        return array(
+            'id' => $this->id,
+            'text'=> $this->social_txt,
+            'createdAt'=> $this->created_at,
+        );
     }
 
 }

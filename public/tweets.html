@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en-GB">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Personal Tweets</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+
+<body>
+    <div ng-app="tweetsApp" ng-controller="fetchCtrl">
+
+        <h2 class="text-center">Sort Tweets by Date</h2>
+
+        <div class="text-center">
+            <strong>Note:</strong> click on table heading (Date) to sort. <br /><br />
+        </div>
+
+        <div class="container">
+            <table class="table table-bordered">
+                <tr>
+                    <th>ID</th>
+                    <th>Message</th>
+                    <th ng-click="sortBy('created_at')">Date</th>
+                </tr>
+                <tr ng-repeat="x in messages | orderBy:column:reverse">
+                    <td>{{ x.id }}</td>
+                    <td>{{ x.text }}</td>
+                    <td>{{ x.createdAt.date}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        var fetch = angular.module('tweetsApp', []);
+
+        fetch.controller('fetchCtrl', ['$scope', '$http', function ($scope, $http) {
+
+            // column to sort
+            $scope.column = 'created_at';
+
+            // sort ordering (Ascending or Descending). Set true for Ascending
+            $scope.reverse = false;
+
+            // called on header click
+            $scope.sortBy = function (col) {
+                $scope.column = col;
+                if ($scope.reverse) {
+                    $scope.reverse = false;
+
+                } else {
+                    $scope.reverse = true;
+                }
+
+            };
+
+            // Fetch data
+            $scope.fetchTweets = function () {
+                $http({
+                    method: 'get',
+                    url: `https://personaltweets.dev/api/social`,
+                }).then(function successCallback(response) {
+                    $scope.messages = response.data;
+                });
+            }
+
+            $scope.fetchTweets();
+        }]);
+
+    </script>
+</body>
+
+</html>
