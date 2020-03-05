@@ -30,7 +30,7 @@ class SocialController extends Controller
     //fetch records from database, served via Laravel view: /messages
     public function indexView(Request $request, SocialRepositoryInterface $social){
         if (!empty($request->input('page'))) {
-            $page = $request->input('page');
+            $page = intval((int)$request->input('page'));
         } else {
             $page = 1;
         }
@@ -45,7 +45,7 @@ class SocialController extends Controller
     //fetch records from database, served via api endpoint: api/social
     public function indexApi(Request $request, SocialRepositoryInterface $social){
         if (!empty($request->input('page'))) {
-            $page = $request->input('page');
+            $page = intval((int)$request->input('page'));
         } else {
             $page = 1;
         }

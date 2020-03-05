@@ -9,7 +9,6 @@
 
     <title>{{ config('app.name', 'Personal Tweets') }}</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 <body>
 <div class="container">
     <table class="table table-bordered">
