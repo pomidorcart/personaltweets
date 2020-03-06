@@ -16,6 +16,7 @@
         "laravel/framework": "^6.2",
         "laravel/telescope": "^3.1",
         "laravel/tinker": "^2.0",
+        "laravel/ui": "^1.2",
         "nesbot/carbon": "^2.31"
     },
     "require-dev": {

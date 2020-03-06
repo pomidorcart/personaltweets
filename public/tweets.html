@@ -57,11 +57,11 @@
 
             };
 
-            // Fetch data
+            // Fetch data | https://personaltweets.dev/api/social
             $scope.fetchTweets = function () {
                 $http({
                     method: 'get',
-                    url: `https://personaltweets.dev/api/social`,
+                    url: 'http://localhost:8080/api/social',
                 }).then(function successCallback(response) {
                     $scope.messages = response.data;
                 });
