@@ -1,78 +1,101 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+## Personal Tweets
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+A Laravel based application supporting following features:
 
-## About Laravel
+-   Social Entity is implemented in Doctrine (Data Mapper Pattern)
+-   Auth uses the User model in Eloquent (Active Record Pattern)
+-   OAuth implementation of api.twitter.com
+-   Fteching 10 most recent tweets using user_timeline endpoint
+-   Paginated collection of tweets in blade view
+-   Sortable List of social tweets by date in single Angular page view
+-   Laravel, Nginx and Mysql services are Dockerised
+-   Telescope for monitoring and logging [only exposed locally].
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Instalaltion
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+1. Start by cloning the repository [in your terminal]:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+    -> git clone https://github.com/pomidorcart/personaltweets.git
 
-## Learning Laravel
+2. -> cd personaltweets
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Configure Laravel
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-> cp .env.example .env
 
-## Laravel Sponsors
+#### Setup MYSQL config
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Leave already populated constants with default value. Enter username and password. Root password should differ from normal user. Later we will configure the mysql container to grant a non-root user access to personaltweets database. These enviroment settings for database will be used in docker-compose.yml to build the mysql server.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=personaltweets
+DB_USERNAME=laraveluser
+DB_PASSWORD=userPass
+MYSQL_ROOT_PASSWORD=rootPass
 
-## Contributing
+#### Setup the Twitter Settings
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Enter your Twitter keys. Screen name is required to get user time_line.
 
-## Code of Conduct
+TWITTER_CONSUMER_KEY=
+TWITTER_CONSUMER_SECRET=
+TWITTER_ACCESS_TOKEN=
+TWITTER_ACCESS_TOKEN_SECRET=
+TWITTER_SCREEN_NAME=
+TWITTER_ENDPOINT=https://api.twitter.com/1.1/
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Setup the Telescope Gate
 
-## Security Vulnerabilities
+Enter your email address, this is optional if you are not planning to make this app public.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+TELESCOPE_GATE_EMAIL=
 
-## License
+-> docker-compose build && docker-compose up -d
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Once the containers are up and running it is time to run lravel migration commands, check if containers are up and running by entering the following command -> docker ps
+You should be able to see three containers: personaltweetsapp, db and webserver.
+
+Before migration, we now need to grant a non-root user access to personaltweets database.
+Login to the db container and create a new user and finally exit the container by running the following commands [Optional, if you want to give lravel a root access to db]:
+
+1. docker-compose exec db bash
+2. mysql -u root -p
+3. show databases;
+4. GRANT ALL ON personaltweets.\* TO 'laraveluser'@'%' IDENTIFIED BY 'userPass';
+5. FLUSH PRIVILEGES;
+6. EXIT;
+7. exit [Note: to exit the container]
+
+### Migrate Eloquent Models
+
+-> docker-compose exec personaltweetsapp php artisan migrate
+
+### Migrate Doctrine Entity
+
+-> docker-compose exec personaltweetsapp php artisan doctrine:schema:create
+
+## Fetch Tweets and View
+
+Call the follwoing endpoint to fetch the 10 most recent tweets from user timeline:
+
+GET: http:localhost/api/social/fetch
+
+Call the following endpoint to view the tweets from database constructed in blade template:
+
+GET: http:localhost/messages
+
+Call the following endpoint to view the tweets from database consutrcuted in single angular page:
+
+GET: http:localhost/tweets.html
+
+Following endpoint returns the tweets from DB in JSON format:
+
+GET: http:localhost/api/social
+
+## Test
+
+To test run following command:
+
+-> docker-compose exec personaltweetsapp php ./vendor/bin/phpunit

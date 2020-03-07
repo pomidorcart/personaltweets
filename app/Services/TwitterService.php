@@ -20,7 +20,7 @@ class TwitterService implements SocialServiceInterface {
         $this->tweetCollection = collect();
         $this->client = null;
         $this->tweet = null;
-        $this->endpoint = "https://api.twitter.com/1.1/";
+        $this->endpoint = env('TWITTER_ENDPOINT', 'https://api.twitter.com/1.1/');
     }
 
     public function socialAuthenticate() {

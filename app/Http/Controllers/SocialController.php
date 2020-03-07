@@ -52,7 +52,7 @@ class SocialController extends Controller
 
         $messages = $social->findAll();
         //dd($messages);
-        return response(json_encode($messages))
+        return response(json_encode($messages), 200)
             ->header('Content-Type', 'json');
     }
 
@@ -78,6 +78,6 @@ class SocialController extends Controller
             $this->entityManager->flush();
         }
 
-        return 200;
+        return response(json_encode(['msg'=>'ssuccess', 'code'=>200]));
     }
 }
