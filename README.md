@@ -75,7 +75,7 @@ Once the containers are up and running it is time to run lravel migration comman
 You should be able to see three containers: personaltweetsapp, db and webserver.
 
 Before migration, we now need to grant a non-root user access to personaltweets database.
-Login to the db container and create a new user and finally exit the container by running the following commands [Optional, if you want to give lravel a root access to db]:
+Login to the db container and create a new user and finally exit the container by running the following commands [Optional, if you want to give laravel a root access to db]:
 
 ```
 1. docker-compose exec db bash
