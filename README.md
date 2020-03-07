@@ -62,6 +62,8 @@ Enter your email address, this is optional if you are not planning to make this 
 TELESCOPE_GATE_EMAIL=
 ```
 
+### Build using Docker Composer
+
 ```
 -> docker-compose build && docker-compose up -d
 ```
