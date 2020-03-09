@@ -29,8 +29,14 @@ class SocialController extends Controller
         $socialService->socialAuthenticate();  
         $this->resultPerPage = 10;      
     }
-
-    //fetch records from database, served via Laravel view: /messages
+  
+    /**
+     * indexView
+     * fetch records from database, served via Laravel view: /messages  
+     * @param  Request $request
+     * @param  SocialRepositoryInterface $social
+     * @return void
+     */
     public function indexView(Request $request, SocialRepositoryInterface $social){
         if (!empty($request->input('page'))) {
             $page = intval((int)$request->input('page'));
@@ -44,8 +50,14 @@ class SocialController extends Controller
             'messages' => $messages
         ]);
     }
-
-    //fetch records from database, served via api endpoint: api/social
+ 
+    /**
+     * indexApi
+     * fetch records from database, served via api endpoint: api/social 
+     * @param  Request $request
+     * @param  SocialRepositoryInterface $social
+     * @return void
+     */
     public function indexApi(Request $request, SocialRepositoryInterface $social){
         if (!empty($request->input('page'))) {
             $page = intval((int)$request->input('page'));
@@ -58,8 +70,12 @@ class SocialController extends Controller
         return response(json_encode($messages), 200)
             ->header('Content-Type', 'json');
     }
-
-    //fetch social messages from social provider and save into db
+   
+    /**
+     * saveUserTimeLine
+     * fetch social messages from social provider and save into db
+     * @return void
+     */
     public function saveUserTimeLine(){
         try {
             $messages = $this->socialService->getSocialUserTimeline()->toArray();

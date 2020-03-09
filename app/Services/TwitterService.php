@@ -7,6 +7,10 @@ use GuzzleHttp\Subscriber\Oauth\Oauth1;
 use Illuminate\Support\Collection;
 use App\Services\Contracts\SocialServiceInterface;
 
+/**
+ * TwitterService
+ * Connect to Twitter API and interact with endpoints.
+ */
 class TwitterService implements SocialServiceInterface {
 
     //Twitter API base endpoint
@@ -22,7 +26,12 @@ class TwitterService implements SocialServiceInterface {
         $this->tweet = null;
         $this->endpoint = env('TWITTER_ENDPOINT', 'https://api.twitter.com/1.1/');
     }
-
+    
+    /**
+     * socialAuthenticate
+     * Authenticate to twitter API using OAuth1
+     * @return void
+     */
     public function socialAuthenticate() {
         $defaults = [];
 
@@ -44,7 +53,13 @@ class TwitterService implements SocialServiceInterface {
 
         $this->client = new Client($defaults);
     }
-    
+        
+    /**
+     * getSocialUserTimeline
+     * Fetch latest 10 user tweets
+     * @param  int $count
+     * @return void
+     */
     public function getSocialUserTimeline($count=10) {
         $response = $this->client->get('statuses/user_timeline.json', [
             'query' => [
@@ -75,7 +90,15 @@ class TwitterService implements SocialServiceInterface {
 
         return $this->tweetCollection;
     }
-
+    
+    /**
+     * readLine
+     *
+     * @param  GuzzleHttp\Psr7\Stream $stream
+     * @param  int $maxLength
+     * @param  string $endOfLine
+     * @return void
+     */
     public function readLine($stream, $maxLength = null, $endOfLine = PHP_EOL)
     {
         $buffer    = '';

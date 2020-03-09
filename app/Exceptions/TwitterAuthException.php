@@ -4,6 +4,10 @@ namespace App\Exceptions;
 
 use Exception;
 
+/**
+ * TwitterAuthException
+ * Custom Social exception for Twitter 
+ */
 class TwitterAuthException extends Exception
 {
     /**
