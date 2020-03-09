@@ -11,6 +11,9 @@ use App\Entities\Social;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
+use App\Exceptions\TwitterAuthException;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7;
 
 class SocialController extends Controller
 {
@@ -58,7 +61,14 @@ class SocialController extends Controller
 
     //fetch social messages from social provider and save into db
     public function saveUserTimeLine(){
-        $messages = $this->socialService->getSocialUserTimeline()->toArray();
+        try {
+            $messages = $this->socialService->getSocialUserTimeline()->toArray();
+        
+        } catch (ClientException $ex){
+            if ($ex->hasResponse()) {
+                throw new TwitterAuthException(Psr7\str($ex->getResponse()));
+            }
+        }
         
         foreach($messages as $message){
             $msg = new Social();
